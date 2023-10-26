@@ -44,13 +44,13 @@ const App = () => {
       setNoImagesFound(false);
       fetchImages();
     }
-  }, [searchQuery]);
+  }, [searchQuery, fetchImages]);
 
   useEffect(() => {
     if (currentPage > 1) {
       fetchImages();
     }
-  }, [currentPage, searchQuery]);
+  }, [currentPage, fetchImages]);
 
   const handleFormSubmit = query => {
     setSearchQuery(query);
