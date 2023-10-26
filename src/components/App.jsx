@@ -37,6 +37,12 @@ const App = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const loadMoreImages = () => {
+    if (!isLoading) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
+
   useEffect(() => {
     if (searchQuery !== '') {
       setCurrentPage(1);
@@ -44,20 +50,16 @@ const App = () => {
       setNoImagesFound(false);
       fetchImages();
     }
-  }, [searchQuery, fetchImages]);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (currentPage > 1) {
       fetchImages();
     }
-  }, [currentPage, fetchImages]);
+  }, [currentPage]);
 
   const handleFormSubmit = query => {
     setSearchQuery(query);
-  };
-
-  const handleLoadMore = () => {
-    setCurrentPage(prevPage => prevPage + 1);
   };
 
   const handleImageClick = largeImageURL => {
@@ -76,7 +78,7 @@ const App = () => {
       <ImageGallery images={images} onImageClick={handleImageClick} />
       {isLoading && <Loader />}
       {images.length > 0 && !noImagesFound && (
-        <Button onClick={handleLoadMore} />
+        <Button onClick={loadMoreImages} />
       )}
       {noImagesFound && <p>No images found.</p>}
       {showModal && (
