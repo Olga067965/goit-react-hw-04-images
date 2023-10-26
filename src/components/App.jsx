@@ -16,21 +16,6 @@ const App = () => {
 
   const apiKey = '38684202-1b965ae9aa77d23174a7bb28f';
 
-  useEffect(() => {
-    if (searchQuery !== '') {
-      setCurrentPage(1);
-      setImages([]);
-      setNoImagesFound(false);
-      fetchImages();
-    }
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (currentPage > 1) {
-      fetchImages();
-    }
-  }, [currentPage]);
-
   const fetchImages = () => {
     const baseUrl = 'https://pixabay.com/api/';
     const perPage = 12;
@@ -51,6 +36,21 @@ const App = () => {
       .catch(error => console.error('Error fetching data:', error))
       .finally(() => setIsLoading(false));
   };
+
+  useEffect(() => {
+    if (searchQuery !== '') {
+      setCurrentPage(1);
+      setImages([]);
+      setNoImagesFound(false);
+      fetchImages();
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (currentPage > 1) {
+      fetchImages();
+    }
+  }, [currentPage, searchQuery]);
 
   const handleFormSubmit = query => {
     setSearchQuery(query);
