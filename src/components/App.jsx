@@ -5,7 +5,7 @@ import Button from './Button';
 import Loader from './Loader';
 import Modal from './Modal';
 
-function App() {
+const App = () => {
   const [images, setImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -13,41 +13,37 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
   const [noImagesFound, setNoImagesFound] = useState(false);
+
   const apiKey = '38684202-1b965ae9aa77d23174a7bb28f';
 
   useEffect(() => {
-    const fetchImages = () => {
-      const baseUrl = 'https://pixabay.com/api/';
-      const perPage = 12;
-      setIsLoading(true);
+    if (searchQuery === '') return;
 
-      fetch(
-        `${baseUrl}?q=${searchQuery}&page=${currentPage}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=${perPage}`
-      )
-        .then(response => response.json())
-        .then(data => {
-          if (data.hits.length > 0) {
-            setImages(prevImages => [...prevImages, ...data.hits]);
-          } else {
-            setNoImagesFound(true);
-          }
-        })
-        .catch(error => console.error('Error fetching data:', error))
-        .finally(() => setIsLoading(false));
-    };
+    setIsLoading(true);
 
-    if (searchQuery !== '') {
-      setCurrentPage(1);
-      setImages([]);
-      setNoImagesFound(false);
-      fetchImages();
-    } else if (currentPage > 1) {
-      fetchImages();
-    }
-  }, [searchQuery, currentPage]);
+    const baseUrl = 'https://pixabay.com/api/';
+    const perPage = 12;
+
+    fetch(
+      `${baseUrl}?q=${searchQuery}&page=${currentPage}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=${perPage}`
+    )
+      .then(response => response.json())
+      .then(data => {
+        if (data.hits.length > 0) {
+          setImages(prevImages => [...prevImages, ...data.hits]);
+        } else {
+          setNoImagesFound(true);
+        }
+      })
+      .catch(error => console.error('Error fetching data:', error))
+      .finally(() => setIsLoading(false));
+  }, [searchQuery, currentPage, apiKey]);
 
   const handleFormSubmit = query => {
     setSearchQuery(query);
+    setCurrentPage(1);
+    setImages([]);
+    setNoImagesFound(false);
   };
 
   const handleLoadMore = () => {
@@ -78,6 +74,6 @@ function App() {
       )}
     </div>
   );
-}
+};
 
 export default App;
