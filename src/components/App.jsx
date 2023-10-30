@@ -4,6 +4,7 @@ import ImageGallery from './ImageGallery';
 import Button from './Button';
 import Loader from './Loader';
 import Modal from './Modal';
+import { fetchImages } from '../configApi';
 
 const App = () => {
   const [images, setImages] = useState([]);
@@ -14,30 +15,21 @@ const App = () => {
   const [largeImageURL, setLargeImageURL] = useState('');
   const [noImagesFound, setNoImagesFound] = useState(false);
 
-  const apiKey = '38684202-1b965ae9aa77d23174a7bb28f';
-
   useEffect(() => {
     if (searchQuery === '') return;
 
     setIsLoading(true);
 
-    const baseUrl = 'https://pixabay.com/api/';
-    const perPage = 12;
-
-    fetch(
-      `${baseUrl}?q=${searchQuery}&page=${currentPage}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=${perPage}`
-    )
-      .then(response => response.json())
+    fetchImages(searchQuery, currentPage)
       .then(data => {
-        if (data.hits.length > 0) {
-          setImages(prevImages => [...prevImages, ...data.hits]);
+        if (data.length > 0) {
+          setImages(prevImages => [...prevImages, ...data]);
         } else {
           setNoImagesFound(true);
         }
       })
-      .catch(error => console.error('Error fetching data:', error))
       .finally(() => setIsLoading(false));
-  }, [searchQuery, currentPage, apiKey]);
+  }, [searchQuery, currentPage]);
 
   const handleFormSubmit = query => {
     setSearchQuery(query);
