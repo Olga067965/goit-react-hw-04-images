@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react';
 
 const Modal = ({ largeImageURL, onClose }) => {
-  const handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      onClose();
-    }
-  };
-
   const handleCloseClick = e => {
     if (e.target === e.currentTarget) {
       onClose();
